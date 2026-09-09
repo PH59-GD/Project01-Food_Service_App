@@ -28,5 +28,19 @@ def LoginScr():
 
 
         elif(UC == "2"):
-            print("This is the sign up screen.")
+            SM = 0
+            while SM != 1:
+                print("This is the sign up screen.")
+                print("")
+                print("Welcome New User!")
+                print("")
+                print("Create a username:")
+                NUN = input()
+                if len(NUN) == 0:
+                    print("Error! Username cannot be blank")# or a number!")
+                else:
+                    print("Enter your password:")
+                    NUP = input()
+
+
 LoginScr()
