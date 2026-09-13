@@ -1,6 +1,49 @@
 import time
-UD = {"JSmith": {"Password": {"1234": "John Smith"}}, } #Dictonary of users
+UD = {"JSmith": {"Password": {"1234": "John Smith"}}, } #Dictonary of customers
+BD = {"TWells": {"Password": {"5678": {"Tom Wells": "Tom's Diner"}}}, } #Dictonary of Business Owners
+BDN = {"TWells": "Tom Wells"} #Business Owner names
+AD = {"PHammel": {"Password": {"1010": "Payton Hammel"}}, "BEthier": {"Password": {"1100": "Brian Ethier"}} } #Dictonary of Admins
+#print(BD["TWells"]["Password"]["5678"]["Tom Wells"])
+
 CU = "" #Current User's name
+def AdmMenu():
+    global CU
+    UMM = 0
+    while UMM != 1:
+        print('\x1bc')
+        print("Welcome, "+CU)
+        print(" __________________________________________________________________________________________")
+        print("|TABS:    |[1]Account|[2]Stores|[3]Cart|[4]Logout|[5]Business Management|[6]User Management|")
+        print("")
+        print("")
+        print("")
+        print("")
+        print("")
+        
+        
+        UC = input()
+        if UC == "4":
+            CU = ""
+            LoginScr()
+def BusMenu():
+    global CU
+    UMM = 0
+    while UMM != 1:
+        print('\x1bc')
+        print("Welcome, "+CU)
+        print(" _____________________________________________________________________")
+        print("|TABS:    |[1]Account|[2]Stores|[3]Cart|[4]Logout|[5]Business Overview|")
+        print("")
+        print("")
+        print("")
+        print("")
+        print("")
+        
+        
+        UC = input()
+        if UC == "4":
+            CU = ""
+            LoginScr()
 def UsrMenu():
     global CU
     UMM = 0
@@ -14,7 +57,7 @@ def UsrMenu():
         print("")
         print("")
         print("")
-        print(UD)
+        
         
         UC = input()
         if UC == "4":
@@ -38,18 +81,54 @@ def LoginScr():
             print('\x1bc')
             print("This is the login screen.") #Login screen
             print("")
-            print("Enter your username:")
-            UN = input()
+            print("[1]Customer")
+            print("[2]Business")
+            print("[3]Administrator")
             print("")
-            print("Enter your password:")
-            UP = input()
-            if(UN in UD.keys() and UP in UD[UN]["Password"].keys()): #Checks to see that the username is a key, and then checks for the matching password
-                print('\x1bc')
-                CU = UD[UN]["Password"][UP] #Retrieves the current user's name to be displayed
-                print("Logging in...")
-                time.sleep(0.5)
-                UsrMenu()
+            UC = input("Input: ")
+            if(UC == "1"):
+                print("Welcome Customer!")
                 print("")
+                print("Enter your username:")
+                UN = input("Input: ")
+                print("")
+                print("Enter your password:")
+                UP = input("Input: ")
+                if(UN in UD.keys() and UP in UD[UN]["Password"].keys()): #Checks to see that the username is a key, and then checks for the matching password
+                    print('\x1bc')
+                    CU = UD[UN]["Password"][UP] #Retrieves the current user's name to be displayed
+                    print("Logging in...")
+                    time.sleep(0.5)
+                    UsrMenu()
+            elif(UC == "2"):
+                print("Welcome Business Owner!")
+                print("")
+                print("Enter your username:")
+                UN = input("Input: ")
+                print("")
+                print("Enter your password:")
+                UP = input("Input: ")
+                if(UN in BD.keys() and UP in BD[UN]["Password"].keys()): #Checks to see that the username is a key, and then checks for the matching password
+                    print('\x1bc')
+                    if BDN[UN] in BD[UN]["Password"][UP].keys(): 
+                        CU = BDN[UN] #Retrieves the current user's name to be displayed
+                        print("Logging in...")
+                        time.sleep(0.5)
+                        BusMenu()
+            elif(UC == "3"):
+                print("Welcome Admin!")
+                print("")
+                print("Enter your username:")
+                UN = input("Input: ")
+                print("")
+                print("Enter your password:")
+                UP = input("Input: ")
+                if(UN in AD.keys() and UP in AD[UN]["Password"].keys()): #Checks to see that the username is a key, and then checks for the matching password
+                    print('\x1bc')
+                    CU = AD[UN]["Password"][UP] #Retrieves the current user's name to be displayed
+                    print("Logging in...")
+                    time.sleep(0.5)
+                    AdmMenu()
             else:
                 print("")
                 print("Incorrect Username or Password!")
