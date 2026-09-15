@@ -4,7 +4,7 @@ BD = {"TWells": {"Password": {"5678": {"Tom Wells": "Tom's Diner"}}}, } #Dictona
 BDN = {"TWells": "Tom Wells"} #Business Owner names
 AD = {"PHammel": {"Password": {"1010": "Payton Hammel"}}, "BEthier": {"Password": {"1100": "Brian Ethier"}} } #Dictonary of Admins
 #print(BD["TWells"]["Password"]["5678"]["Tom Wells"])
-
+DL = []
 CU = "" #Current User's name
 def AdmMenu():
     global CU
@@ -59,10 +59,45 @@ def UsrMenu():
         print("")
         
         
-        UC = input()
+        UC = input("Input: ")
         if UC == "4":
             CU = ""
             LoginScr()
+        elif UC == "1":
+            print('\x1bc')
+            AM = 0
+            while AM != 1:
+                print("|"+CU+"'s"+" Account|")
+                print("")
+                print("[1]Change Username")
+                print("[2]Change Password")
+                print("[3][ADD EXTRA FUNCTION HERE]")
+                print("[4]Back")
+                print("")
+                AC = input("Input: ")
+                if(AC == "4"):
+                    AM += 1
+        elif UC == "2":
+            print('\x1bc')
+            SM = 0
+            while SM != 1:
+                print("| "+str(len(DL))+" Stores found |")
+                print("")
+                print("[LIST OF STORES HERE]")
+                print("")
+                print("[0]Back")
+                print("")
+                AC = input("Input: ")
+                if(AC == "0"):
+                    SM += 1
+        elif UC == "3":
+            print('\x1bc')
+            SM = 0
+            while SM != 1:
+                print("[CART HERE]")
+                AC = input("Input: ")
+                if(AC == "0"):
+                    SM += 1
 def LoginScr():
     global CU
     LM = 0
@@ -140,18 +175,54 @@ def LoginScr():
                 print("")
                 print("Welcome New User!")
                 print("")
-                print("Create a username:")
-                NUN = input()
-                if len(NUN) == 0:
-                    print("Error! Username cannot be blank")# or a number!")
-                    time.sleep(1)
-                else:
-                    print("Enter your password:")
-                    NUP = input()
+                print("[1]Customer")
+                print("[2]Business")
+                print("")
+                UC = input("Input: ")
+                if (UC == "1"):
+                    print('\x1bc')
+                    print("Welcome new customer!")
+                    print("Fill out the information below to create an account.")
                     print("")
-                    print("Enter your name(EX: John Smith):")
-                    NN = input()
-                    UD[NUN] = {"Password": {NUP: NN}} #Creating a new user for the UD dictonary 
-                    LoginScr()
+                    print("Create a username:")
+                    NUN = input()
+                    if len(NUN) == 0:
+                        print("Error! Username cannot be blank")# or a number!")
+                        time.sleep(1)
+                    else:
+                        print("Enter your password:")
+                        NUP = input()
+                        print("")
+                        print("Enter your name(EX: John Smith):")
+                        NN = input()
+                        UD[NUN] = {"Password": {NUP: NN}} #Creating a new user for the UD dictonary 
+                        print("Creating new account...")
+                        time.sleep(0.5)
+                        LoginScr()
+                if (UC == "2"):
+                    print('\x1bc')
+                    print("Welcome business owner!")
+                    print("Fill out the information below to create an account.")
+                    print("")
+                    print("Create a username:")
+                    NUN = input()
+                    if len(NUN) == 0:
+                        print("Error! Username cannot be blank")# or a number!")
+                        time.sleep(1)
+                    else:
+                        print("Enter your password:")
+                        NUP = input()
+                        print("")
+                        print("Enter your name(EX: John Smith):")
+                        NN = input()
+                        print("")
+                        print("Enter your business's name:")
+                        NBN = input()
+                        BDN[NUN] = NN
+                        BD[NUN] = {"Password": {NUP: {NN:NBN}}} #Creating a new user for the UD dictonary 
+                        print("Creating new account...")
+                        time.sleep(0.5)
+                        LoginScr()
 LoginScr()
+#CU = "name"
 #UsrMenu()
