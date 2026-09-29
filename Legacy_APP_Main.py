@@ -1,14 +1,16 @@
 import time
-UD = {"JSmith": {"Password": {"1234": "John Smith"}}, } #Dictonary of customers
-BD = {"TWells": {"Password": {"5678": {"Tom Wells": "Tom's Diner"}}}, } #Dictonary of Business Owners
-BDN = {"TWells": "Tom Wells"} #Business Owner names
-AD = {"PHammel": {"Password": {"1010": "Payton Hammel"}}, "BEthier": {"Password": {"1100": "Brian Ethier"}} } #Dictonary of Admins
-#print(BD["TWells"]["Password"]["5678"]["Tom Wells"])
+UD = {"JSmith": {"Name": "John Smith", "Password": "1234", "Cart": [], "UName": "JSmith"}, } #Dictonary of customers
+BD = {"TWells": {"Name": "Tom Wells", "Password": "5678", "Business": "Tom's Diner", "Cart": [] }, } #Dictonary of Business Owners
+AD = {"PHammel": {"Name": "Payton Hammel", "Password": "1010", "Cart": []}, "BEthier": {"Name": "Brian Ethier", "Password": "1100", "Cart": []} } #Dictonary of Admins
+NPS = []
+LS = ["Tom's Diner"]
 DL = []
 CU = "" #Current User's name
 BN = "" #Current Business's name
 def AdmMenu():
     global CU
+    global NPS
+    global LS
     UMM = 0
     while UMM != 1:
         print('\x1bc')
@@ -60,10 +62,34 @@ def AdmMenu():
             SM = 0
             while SM != 1:
                 print('\x1bc')
-                print("[CART HERE]")
+                print(UD[CU]["Cart"])
+                print("")
                 AC = input("Input: ")
                 if(AC == "0"):
                     SM += 1
+        elif UC == "5":
+            BMM = 0
+            while BMM != 1:
+                print("Business Management")
+                print("")
+                if(len(NPS) > 0):
+                    print("Unapproved Businesses:")
+                    print(NPS)
+
+
+                else:
+                    print("No unapproved businesses.")
+                print("")
+                if(len(LS) > 0):
+                    print("Approved Businesses:")
+                    print(LS)
+
+                else:
+                    print("No approved businesses.")
+                print("[0] Back")
+                UI = input("Input: ")
+                if(UI == "0"):
+                    BMM += 1
 def BusMenu():
     global CU
     global BN
@@ -119,7 +145,7 @@ def BusMenu():
             SM = 0
             while SM != 1:
                 print('\x1bc')
-                print("[CART HERE]")
+                print(UD[CU]["Cart"])
                 print("")
                 print("[0]Back")
                 AC = input("Input: ")
@@ -142,7 +168,7 @@ def UsrMenu():
     UMM = 0
     while UMM != 1:
         print('\x1bc')
-        print("Welcome, "+CU)
+        print("Welcome, "+UD[CU]["Name"])
         print(" ________________________________________________")
         print("|TABS:    |[1]Account|[2]Stores|[3]Cart|[4]Logout|")
         print("")
@@ -190,7 +216,9 @@ def UsrMenu():
             SM = 0
             while SM != 1:
                 print('\x1bc')
-                print("[CART HERE]")
+                
+                print(UD[CU]["Cart"])
+                print("")
                 AC = input("Input: ")
                 if(AC == "0"):
                     SM += 1
@@ -227,9 +255,9 @@ def LoginScr():
                 print("")
                 print("Enter your password:")
                 UP = input("Input: ")
-                if(UN in UD.keys() and UP in UD[UN]["Password"].keys()): #Checks to see that the username is a key, and then checks for the matching password
+                if(UN in UD.keys() and UD[UN]["Password"] == UP): 
                     print('\x1bc')
-                    CU = UD[UN]["Password"][UP] #Retrieves the current user's name to be displayed
+                    CU = UD[UN]["UName"] 
                     print("Logging in...")
                     time.sleep(0.5)
                     UsrMenu()
@@ -242,14 +270,13 @@ def LoginScr():
                 print("")
                 print("Enter your password:")
                 UP = input("Input: ")
-                if(UN in BD.keys() and UP in BD[UN]["Password"].keys()): #Checks to see that the username is a key, and then checks for the matching password
+                if(UN in BD.keys() and BD[UN]["Password"] == UP): 
                     print('\x1bc')
-                    if BDN[UN] in BD[UN]["Password"][UP].keys(): 
-                        CU = BDN[UN] #Retrieves the current user's name to be displayed
-                        BN = BD[UN]["Password"][UP][BDN[UN]]
-                        print("Logging in...")
-                        time.sleep(0.5)
-                        BusMenu()
+                    CU = BD[UN]["Name"] 
+                    BN = BD[UN]["Business"]
+                    print("Logging in...")
+                    time.sleep(0.5)
+                    BusMenu()
             elif(UC == "3"):
                 print('\x1bc')
                 print("Welcome Admin!")
@@ -259,9 +286,9 @@ def LoginScr():
                 print("")
                 print("Enter your password:")
                 UP = input("Input: ")
-                if(UN in AD.keys() and UP in AD[UN]["Password"].keys()): #Checks to see that the username is a key, and then checks for the matching password
+                if(UN in AD.keys() and AD[UN]["Password"] == UP): 
                     print('\x1bc')
-                    CU = AD[UN]["Password"][UP] #Retrieves the current user's name to be displayed
+                    CU = AD[UN]["Name"] 
                     print("Logging in...")
                     time.sleep(0.5)
                     AdmMenu()
@@ -296,7 +323,7 @@ def LoginScr():
                         print("")
                         print("Enter your name(EX: John Smith):")
                         NN = input()
-                        UD[NUN] = {"Password": {NUP: NN}} #Creating a new user for the UD dictonary 
+                        UD[NUN] = {"Name": NN, "Password": NUP, "Cart": []} #Creating a new user for the UD dictonary 
                         print("Creating new account...")
                         time.sleep(0.5)
                         LoginScr()
@@ -319,8 +346,8 @@ def LoginScr():
                         print("")
                         print("Enter your business's name:")
                         NBN = input()
-                        BDN[NUN] = NN
-                        BD[NUN] = {"Password": {NUP: {NN:NBN}}} #Creating a new user for the UD dictonary 
+                        BD[NUN] = {"Name": NN, "Password": NUP, "Business": NBN, "Cart": []} #Creating a new user for the UD dictonary 
+                        NPS.append[NBN]
                         print("Creating new account...")
                         time.sleep(0.5)
                         LoginScr()
