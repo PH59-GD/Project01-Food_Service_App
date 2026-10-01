@@ -1,4 +1,6 @@
-import time
+import tkinter as tk
+from tkinter import ttk, messagebox
+
 UD = {"JSmith": {"Password": {"1234": "John Smith"}}, } #Dictonary of customers
 BD = {"TWells": {"Password": {"5678": {"Tom Wells": "Tom's Diner"}}}, } #Dictonary of Business Owners
 BDN = {"TWells": "Tom Wells"} #Business Owner names
@@ -7,6 +9,7 @@ AD = {"PHammel": {"Password": {"1010": "Payton Hammel"}}, "BEthier": {"Password"
 DL = []
 CU = "" #Current User's name
 BN = "" #Current Business's name
+
 def AdmMenu():
     global CU
     UMM = 0
@@ -64,6 +67,7 @@ def AdmMenu():
                 AC = input("Input: ")
                 if(AC == "0"):
                     SM += 1
+
 def BusMenu():
     global CU
     global BN
@@ -137,6 +141,7 @@ def BusMenu():
                 AC = input("Input: ")
                 if(AC == "0"):
                     SM += 1
+
 def UsrMenu():
     global CU
     UMM = 0
