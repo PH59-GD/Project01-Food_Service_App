@@ -199,3 +199,9 @@ def UsrMenu():
                 AC = input("Input: ")
                 if(AC == "0"):
                     SM += 1
+def LoginScr():
+   window = tk.TK()
+
+    window.title("Login")
+    
+    
