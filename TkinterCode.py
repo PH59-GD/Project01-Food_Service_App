@@ -1,4 +1,4 @@
-import tkinter as tk
+import tkinter as tk #Justus says to possibly use streamlit GUI
 from tkinter import ttk, messagebox
 
 UD = {"JSmith": {"Password": {"1234": "John Smith"}}, } #Dictonary of customers
