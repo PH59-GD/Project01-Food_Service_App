@@ -1,9 +1,28 @@
 import streamlit as st
 
-UD = {"JSmith": {"Password": {"1234": "John Smith"}}, } #Dictonary of customers
-BD = {"TWells": {"Password": {"5678": {"Tom Wells": "Tom's Diner"}}}, } #Dictonary of Business Owners
-BDN = {"TWells": "Tom Wells"} #Business Owner names
-AD = {"PHammel": {"Password": {"1010": "Payton Hammel"}}, "BEthier": {"Password": {"1100": "Brian Ethier"}} } #Dictonary of Admins
+UD = { #Dictonary of customers
+    "JSmith": {
+        "Password": {
+            "1234": "John Smith"
+        }
+    }
+}
+BD = { #Dictonary of Business Owners
+    "TWells": {
+        "Password": {
+            "5678": {
+                "Tom Wells": "Tom's Diner"
+            }
+        }
+    }
+}
+BDN = { #Business Owner names
+    "TWells": "Tom Wells"
+}
+AD = { #Dictonary of Admins
+    "PHammel": {"Password": {"1010": "Payton Hammel"}},
+      "BEthier": {"Password": {"1100": "Brian Ethier"}}
+} #Dictonary of Admins
 #print(BD["TWells"]["Password"]["5678"]["Tom Wells"])
 DL = []
 CU = "" #Current User's name
@@ -44,6 +63,51 @@ def LoginScr(username, password):
     st.error("Login Failed")
     st.write("Invalid username or password.")
 
+def SignUp(username, password, full_name):
+    if not username or not password or not full_name:
+        st.error("Please fill out all fields")
+        return
+
+    if username in UD or username in BD or username in AD:
+        st.error("That username already exists, please choose another one.")
+        return
+
+    UD[username] = {
+        "Password": {
+            password: full_name
+        }
+    }
+
+    st.success("Account created successfully!")
+    st.write(f"Welcome, {full_name}!")
+    st.info("You can now return to Login Screen and log in.")
+
+def BusinessSignUp(username, password, full_name, business_name):
+    if not username or not password or not full_name or not business_name:
+        st.error("Please fill out all fields")
+        return
+
+    if username in UD or username in BD or username in AD:
+        st.error("That username already exists, please choose another one.")
+        return
+
+    BD[username] = {
+        "Password": {
+            password: {
+                full_name: business_name
+            }
+        }
+    }
+
+    BDN[username] = full_name
+
+    st.success("Business account created successfully!")
+    st.write(f"Welcome, {full_name}!")
+    st.write(f"Business: {business_name}")
+    st.info("You can now return to Login and log in.")
+
+
+
 
 st.set_page_config(
     page_title="Login",
@@ -75,15 +139,93 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown(
-    '<div class="login-title">Login</div>',
-    unsafe_allow_html=True
-)
+login_tab, signup_tab, = st.tabs(["Login", "SignUp"])
 
-username = st.text_input("Username")
+with login_tab:
 
-password = st.text_input("Password",
-                         type = "password")
+    st.markdown(
+        '<div class="login-title">Login</div>',
+        unsafe_allow_html=True
+    )
 
-if st.button("Login"):
-    LoginScr(username, password)
+    username = st.text_input(
+        "Username",
+        key="login_username"
+    )
+
+    password = st.text_input(
+        "Password",
+        type="password",
+        key="login_password"
+    )
+
+    if st.button("Login", key="login_button"):
+
+        # Don't allow empty login information
+        if not username or not password:
+            st.error("Please enter a username and password.")
+        else:
+            LoginScr(username, password)
+
+with signup_tab:
+
+    st.markdown(
+        '<div class="login-title">Sign Up</div>',
+        unsafe_allow_html=True
+    )
+
+    account_type = st.radio(
+        "Account Type",
+        ["Customer", "Business Owner"]
+    )
+
+    new_name = st.text_input(
+        "Full Name",
+        key="signup_name"
+    )
+
+    new_username = st.text_input(
+        "Username",
+        key="signup_username"
+    )
+
+    new_password = st.text_input(
+        "Password",
+        type="password",
+        key="signup_password"
+    )
+
+    confirm_password = st.text_input(
+        "Confirm Password",
+        type="password",
+        key="confirm_password"
+    )
+
+    # Only show this field for Business Owners
+    if account_type == "Business Owner":
+        business_name = st.text_input(
+            "Business Name",
+            key="business_name"
+        )
+
+    if st.button("Sign Up", key="signup_button"):
+
+        if new_password != confirm_password:
+            st.error("Passwords do not match.")
+
+        elif account_type == "Customer":
+
+            SignUp(
+                new_username,
+                new_password,
+                new_name
+            )
+
+        elif account_type == "Business Owner":
+
+            BusinessSignUp(
+                new_username,
+                new_password,
+                new_name,
+                business_name
+            )
