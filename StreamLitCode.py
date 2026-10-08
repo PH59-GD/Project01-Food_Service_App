@@ -122,20 +122,27 @@ st.markdown("""
 
     .login-title {
         font-family: Georgia;
-        font-size: 32px;
+        font-size: 64px;
         text-align: center;
         color: black;
     }
 
     .stTextInput label {
         font-family: Georgia;
-        font-size: 18px;
+        font-size: 32px;
+    }
+
+    .stTextInput input {
+        font-family: Georgia;
+        font-size: 24px;
     }
 
     .stButton button {
         font-family: Georgia;
-        font-size: 18px;
+        font-size: 32px;
     }
+
+   
 </style>
 """, unsafe_allow_html=True)
 
@@ -229,3 +236,4 @@ with signup_tab:
                 new_name,
                 business_name
             )
+
