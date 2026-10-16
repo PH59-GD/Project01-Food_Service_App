@@ -1,67 +1,42 @@
 import streamlit as st
 
-UD = { #Dictonary of customers
-    "JSmith": {
-        "Password": {
-            "1234": "John Smith"
-        }
-    }
-}
-BD = { #Dictonary of Business Owners
-    "TWells": {
-        "Password": {
-            "5678": {
-                "Tom Wells": "Tom's Diner"
-            }
-        }
-    }
-}
-BDN = { #Business Owner names
-    "TWells": "Tom Wells"
-}
-AD = { #Dictonary of Admins
-    "PHammel": {"Password": {"1010": "Payton Hammel"}},
-      "BEthier": {"Password": {"1100": "Brian Ethier"}}
-} #Dictonary of Admins
+UD = {"JSmith": {"Name": "John Smith", "Password": "1234", "Cart": [], "UName": "JSmith"}, } #Dictonary of customers
+BD = {"TWells": {"Name": "Tom Wells", "Password": "5678", "Business": "Tom's Diner", "Cart": [] }, } #Dictonary of Business Owners
+AD = {"PHammel": {"Name": "Payton Hammel", "Password": "1010", "Cart": []}, "BEthier": {"Name": "Brian Ethier", "Password": "1100", "Cart": []} }
 #print(BD["TWells"]["Password"]["5678"]["Tom Wells"])
 DL = []
 CU = "" #Current User's name
 BN = "" #Current Business's name
 
 def LoginScr(username, password):
-    global CU, BN
+	global CU, BN
+	#st.write(f"Welcome, {UD}!")
+		
+	if username in UD:
+		if password == UD[username]["Password"]:
+			CU = UD[username]["Name"]
+			st.success("Login Successful")
+			st.write(f"Welcome, {CU}!")
 
-    if username in UD:
-        if password in UD[username]["Password"]:
-            CU = UD[username]["Password"][password]
+	elif username in BD:
+		if password in BD[username]["Password"]:
+			business_info = BD[username]["Business"]
+			CU = BD[username]["name"]
+			BN = BD[username]["Business"]
+			st.success("Login Successful")
+			st.write(f"Welcome, {CU}!")
+			st.write(f"Business: {BN}")
+			return
 
-            st.success("Login Successful")
-            st.write(f"Welcome, {CU}!")
-            return
-
-    if username in BD:
-        if password in BD[username]["Password"]:
-            business_info = BD[username]["Password"][password]
-
-            for name, business in business_info.items():
-                CU = name
-                BN = business
-
-            st.success("Login Successful")
-            st.write(f"Welcome, {CU}!")
-            st.write(f"Business: {BN}")
-            return
-
-    if username in AD:
-        if password in AD[username]["Password"]:
-            CU = AD[username]["Password"][password]
-
-            st.success("Login Successful")
-            st.write(f"Welcome, Admin {CU}!")
-            return
-
-    st.error("Login Failed")
-    st.write("Invalid username or password.")
+	elif username in AD:
+		if password in AD[username]["Password"]:
+			CU = AD[username]["Password"][password]
+			st.success("Login Successful")
+			st.write(f"Welcome, Admin {CU}!")
+			return
+	else:
+		st.error("Login Failed")
+		st.write("Invalid username or password.")
 
 def SignUp(username, password, full_name):
     if not username or not password or not full_name:
@@ -71,17 +46,18 @@ def SignUp(username, password, full_name):
     if username in UD or username in BD or username in AD:
         st.error("That username already exists, please choose another one.")
         return
-
+	#UD[username] = {{"Name": full_name, "Password": password, "Cart": []}}
     UD[username] = {
-        "Password": {
-            password: full_name
+        "Name": full_name,
+            "Password": password
         }
-    }
-
+    
+    
+	
     st.success("Account created successfully!")
-    st.write(f"Welcome, {full_name}!")
+    st.write(f"Welcome, {UD}!")
     st.info("You can now return to Login Screen and log in.")
-
+	
 def BusinessSignUp(username, password, full_name, business_name):
     if not username or not password or not full_name or not business_name:
         st.error("Please fill out all fields")
@@ -122,27 +98,20 @@ st.markdown("""
 
     .login-title {
         font-family: Georgia;
-        font-size: 64px;
+        font-size: 32px;
         text-align: center;
         color: black;
     }
 
     .stTextInput label {
         font-family: Georgia;
-        font-size: 32px;
-    }
-
-    .stTextInput input {
-        font-family: Georgia;
-        font-size: 24px;
+        font-size: 18px;
     }
 
     .stButton button {
         font-family: Georgia;
-        font-size: 32px;
+        font-size: 18px;
     }
-
-   
 </style>
 """, unsafe_allow_html=True)
 
@@ -236,4 +205,3 @@ with signup_tab:
                 new_name,
                 business_name
             )
-
