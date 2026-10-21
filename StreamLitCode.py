@@ -1,4 +1,39 @@
 import streamlit as st
+import pickle
+class User:
+    def __init__(self):
+        self.Username = ""
+        self.Name = ""
+        self.Password = ""
+        self.Cart = []
+    def Create_New_user(self, UName, Pass, UsrName):
+        self.Username = UName
+        self.Name = UsrName
+        self.Password = Pass
+        self.Cart = []
+class BusinessOwner:
+    def __init__(self):
+        self.Username = ""
+        self.Name = ""
+        self.Password = ""
+        self.Cart = ""
+        self.Business = ""
+    def Create_New_businessO(self, UName, Pass, UsrName, BusinessName):
+        self.Username = UName
+        self.Name = UsrName
+        self.Password = Pass
+        self.Business = BusinessName
+        self.Cart = []
+class Admin:
+    def __init__(self):
+        self.Username = ""
+        self.Name = ""
+        self.Cart = ""
+    def Create_New_Admin(self, UName, Pass, UsrName):
+        self.Username = UName
+        self.Name = UsrName
+        self.Password = Pass
+        self.Cart = []
 
 UD = {"JSmith": {"Name": "John Smith", "Password": "1234", "Cart": [], "UName": "JSmith"}, } #Dictonary of customers
 BD = {"TWells": {"Name": "Tom Wells", "Password": "5678", "Business": "Tom's Diner", "Cart": [] }, } #Dictonary of Business Owners
@@ -43,18 +78,6 @@ def LoginScr(username, password):
     st.error("Login Failed")
     st.write("Invalid username or password.")
 
-    col1, col2 = st.columns(2)
-
-    with col1:
-        if st.button("Back to Welcome"):
-            st.session_state.screen = "welcome"
-            st.rerun()
-
-    with col2:
-        if st.button("Go to Sign Up"):
-            st.session_state.screen = "signup"
-            st.rerun()
-
 def SignUp(username, password, full_name):
     if not username or not password or not full_name:
         st.error("Please fill out all fields")
@@ -64,28 +87,15 @@ def SignUp(username, password, full_name):
         st.error("That username already exists, please choose another one.")
         return
 
-    UD[username] = {
-        "Name": full_name,
-        "Password": password,
-        "Cart": [],
-        "UName": username
-    }
+    NUser = User()  
+    NUser.Create_New_user(username, password, full_name)
+    file1 = open("Users.dat", "ab")
+    pickle.dump(NUser, file1)
+    file1.close()
 
     st.success("Account created successfully!")
     st.write(f"Welcome, {full_name}!")
     st.info("You can now return to Login Screen and log in.")
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        if st.button("Back to Welcome"):
-            st.session_state.screen = "welcome"
-            st.rerun()
-
-    with col2:
-        if st.button("Go to Login"):
-            st.session_state.screen = "login"
-            st.rerun()
 
 def BusinessSignUp(username, password, full_name, business_name):
     if not username or not password or not full_name or not business_name:
@@ -96,14 +106,13 @@ def BusinessSignUp(username, password, full_name, business_name):
         st.error("That username already exists, please choose another one.")
         return
 
-    BD[username] = {
-        "Name": full_name,
-        "Password": password,
-        "Business": business_name,
-        "Cart": []
-    }
+    NBusinessO = BusinessOwner()
+    NBusinessO.Create_New_businessO(username, password, full_name, business_name)
+    file2 = open("BusinessOwners.dat", "ab")
+    pickle.dump(NBusinessO, file2)
+    file2.close()
 
-    BN[username] = business_name
+    
 
     st.success("Business account created successfully!")
     st.write(f"Welcome, {full_name}!")
@@ -197,12 +206,12 @@ elif st.session_state.screen == "login":
         else:
             LoginScr(username, password)
 
-    if st.button("Create an Account"):
-        st.session_state.screen = "signup"
-        st.rerun()
-
     if st.button("Back"):
         st.session_state.screen = "welcome"
+        st.rerun()
+
+    if st.button("Create an Account"):
+        st.session_state.screen = "signup"
         st.rerun()
 
 elif st.session_state.screen == "signup":
@@ -279,11 +288,3 @@ elif st.session_state.screen == "signup":
                 new_name,
                 business_name
             )
-
-        if st.button("Log In"):
-            st.session_state.screen = "login"
-            st.rerun()
-
-        if st.button("Back"):
-            st.session_state.screen = "welcome"
-            st.rerun()
