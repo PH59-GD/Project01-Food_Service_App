@@ -2,41 +2,46 @@ import streamlit as st
 
 UD = {"JSmith": {"Name": "John Smith", "Password": "1234", "Cart": [], "UName": "JSmith"}, } #Dictonary of customers
 BD = {"TWells": {"Name": "Tom Wells", "Password": "5678", "Business": "Tom's Diner", "Cart": [] }, } #Dictonary of Business Owners
-AD = {"PHammel": {"Name": "Payton Hammel", "Password": "1010", "Cart": []}, "BEthier": {"Name": "Brian Ethier", "Password": "1100", "Cart": []} }
-#print(BD["TWells"]["Password"]["5678"]["Tom Wells"])
+AD = {"PHammel": {"Name": "Payton Hammel", "Password": "1010", "Cart": []}, "BEthier": {"Name": "Brian Ethier", "Password": "1100", "Cart": []} } #Dictonary of Admins
+NPS = []
+LS = ["Tom's Diner"]
 DL = []
 CU = "" #Current User's name
 BN = "" #Current Business's name
 
 def LoginScr(username, password):
-	global CU, BN
-	#st.write(f"Welcome, {UD}!")
-		
-	if username in UD:
-		if password == UD[username]["Password"]:
-			CU = UD[username]["Name"]
-			st.success("Login Successful")
-			st.write(f"Welcome, {CU}!")
+    global CU, BN
 
-	elif username in BD:
-		if password in BD[username]["Password"]:
-			business_info = BD[username]["Business"]
-			CU = BD[username]["name"]
-			BN = BD[username]["Business"]
-			st.success("Login Successful")
-			st.write(f"Welcome, {CU}!")
-			st.write(f"Business: {BN}")
-			return
+    if username in UD:
+        if password == UD[username]["Password"]:
+            CU = UD[username]["Name"]
+            BN = ""
 
-	elif username in AD:
-		if password in AD[username]["Password"]:
-			CU = AD[username]["Password"][password]
-			st.success("Login Successful")
-			st.write(f"Welcome, Admin {CU}!")
-			return
-	else:
-		st.error("Login Failed")
-		st.write("Invalid username or password.")
+            st.success("Login Successful")
+            st.write(f"Welcome, {CU}!")
+            return
+
+    elif username in BD:
+        if password == BD[username]["Password"]:
+            CU = BD[username]["Name"]
+            BN = BD[username]["Business"]
+
+            st.success("Login Successful")
+            st.write(f"Welcome, {CU}!")
+            st.write(f"Business: {BN}")
+            return
+
+    elif username in AD:
+        if password == AD[username]["Password"]:
+            CU = AD[username]["Name"]
+            BN = ""
+
+            st.success("Login Successful")
+            st.write(f"Welcome, Admin {CU}!")
+            return
+
+    st.error("Login Failed")
+    st.write("Invalid username or password.")
 
 def SignUp(username, password, full_name):
     if not username or not password or not full_name:
@@ -46,18 +51,18 @@ def SignUp(username, password, full_name):
     if username in UD or username in BD or username in AD:
         st.error("That username already exists, please choose another one.")
         return
-	#UD[username] = {{"Name": full_name, "Password": password, "Cart": []}}
+
     UD[username] = {
         "Name": full_name,
-            "Password": password
-        }
-    
-    
-	
+        "Password": password,
+        "Cart": [],
+        "UName": username
+    }
+
     st.success("Account created successfully!")
-    st.write(f"Welcome, {UD}!")
+    st.write(f"Welcome, {full_name}!")
     st.info("You can now return to Login Screen and log in.")
-	
+
 def BusinessSignUp(username, password, full_name, business_name):
     if not username or not password or not full_name or not business_name:
         st.error("Please fill out all fields")
@@ -68,14 +73,13 @@ def BusinessSignUp(username, password, full_name, business_name):
         return
 
     BD[username] = {
-        "Password": {
-            password: {
-                full_name: business_name
-            }
-        }
+        "Name": full_name,
+        "Password": password,
+        "Business": business_name,
+        "Cart": []
     }
 
-    BDN[username] = full_name
+    BN[username] = business_name
 
     st.success("Business account created successfully!")
     st.write(f"Welcome, {full_name}!")
@@ -98,26 +102,52 @@ st.markdown("""
 
     .login-title {
         font-family: Georgia;
-        font-size: 32px;
+        font-size: 64px;
         text-align: center;
         color: black;
     }
 
     .stTextInput label {
         font-family: Georgia;
-        font-size: 18px;
+        font-size: 24px;
+    }
+
+    .stTextInput input {
+        font-family: Georgia;
+        font-size: 24px;
     }
 
     .stButton button {
         font-family: Georgia;
-        font-size: 18px;
+        font-size: 32px;
     }
+
+   
 </style>
 """, unsafe_allow_html=True)
 
-login_tab, signup_tab, = st.tabs(["Login", "SignUp"])
+if "screen" not in st.session_state:
+    st.session_state.screen = "welcome"
 
-with login_tab:
+
+if st.session_state.screen == "welcome":
+    st.title("Welcome!")
+    st.write("Please Log In or Sign Up")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        if st.button("Login"):
+            st.session_state.screen = "login"
+            st.rerun()
+
+    with col2:
+        if st.button("Sign Up"):
+            st.session_state.screen = "signup"
+            st.rerun()
+
+
+elif st.session_state.screen == "login":
 
     st.markdown(
         '<div class="login-title">Login</div>',
@@ -143,7 +173,15 @@ with login_tab:
         else:
             LoginScr(username, password)
 
-with signup_tab:
+    if st.button("Back"):
+        st.session_state.screen = "welcome"
+        st.rerun()
+
+    if st.button("Create an Account"):
+        st.session_state.screen = "signup"
+        st.rerun()
+
+elif st.session_state.screen == "signup":
 
     st.markdown(
         '<div class="login-title">Sign Up</div>',
@@ -177,7 +215,8 @@ with signup_tab:
         key="confirm_password"
     )
 
-    # Only show this field for Business Owners
+    business_name = ""
+
     if account_type == "Business Owner":
         business_name = st.text_input(
             "Business Name",
@@ -186,8 +225,19 @@ with signup_tab:
 
     if st.button("Sign Up", key="signup_button"):
 
-        if new_password != confirm_password:
+        if not all([
+            new_name,
+            new_username,
+            new_password,
+            confirm_password
+        ]):
+            st.error("Please fill out all of the fields.")
+
+        elif new_password != confirm_password:
             st.error("Passwords do not match.")
+
+        elif account_type == "Business Owner" and not business_name:
+            st.error("Please enter your business name.")
 
         elif account_type == "Customer":
 
