@@ -43,6 +43,18 @@ def LoginScr(username, password):
     st.error("Login Failed")
     st.write("Invalid username or password.")
 
+    col1, col2 = st.columns(2)
+
+    with col1:
+        if st.button("Back to Welcome"):
+            st.session_state.screen = "welcome"
+            st.rerun()
+
+    with col2:
+        if st.button("Go to Sign Up"):
+            st.session_state.screen = "signup"
+            st.rerun()
+
 def SignUp(username, password, full_name):
     if not username or not password or not full_name:
         st.error("Please fill out all fields")
@@ -62,6 +74,18 @@ def SignUp(username, password, full_name):
     st.success("Account created successfully!")
     st.write(f"Welcome, {full_name}!")
     st.info("You can now return to Login Screen and log in.")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        if st.button("Back to Welcome"):
+            st.session_state.screen = "welcome"
+            st.rerun()
+
+    with col2:
+        if st.button("Go to Login"):
+            st.session_state.screen = "login"
+            st.rerun()
 
 def BusinessSignUp(username, password, full_name, business_name):
     if not username or not password or not full_name or not business_name:
@@ -173,12 +197,12 @@ elif st.session_state.screen == "login":
         else:
             LoginScr(username, password)
 
-    if st.button("Back"):
-        st.session_state.screen = "welcome"
-        st.rerun()
-
     if st.button("Create an Account"):
         st.session_state.screen = "signup"
+        st.rerun()
+
+    if st.button("Back"):
+        st.session_state.screen = "welcome"
         st.rerun()
 
 elif st.session_state.screen == "signup":
@@ -255,3 +279,11 @@ elif st.session_state.screen == "signup":
                 new_name,
                 business_name
             )
+
+        if st.button("Log In"):
+            st.session_state.screen = "login"
+            st.rerun()
+
+        if st.button("Back"):
+            st.session_state.screen = "welcome"
+            st.rerun()
