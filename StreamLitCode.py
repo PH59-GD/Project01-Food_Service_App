@@ -256,6 +256,10 @@ elif st.session_state.screen == "signup":
             key="business_name"
         )
 
+    if st.button("Back"):
+        st.session_state.screen = "welcome"
+        st.rerun()
+        
     if st.button("Sign Up", key="signup_button"):
 
         if not all([
