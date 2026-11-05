@@ -1,16 +1,22 @@
 import streamlit as st
 import pickle
+RLU = []
+RLBO = []
+RLADMIN = []
 class User:
     def __init__(self):
         self.Username = ""
         self.Name = ""
         self.Password = ""
         self.Cart = []
+        self.Info = {}
     def Create_New_user(self, UName, Pass, UsrName):
         self.Username = UName
         self.Name = UsrName
         self.Password = Pass
         self.Cart = []
+        self.Info = {"User": self.Username, "Name": self.Name, "Password": self.Password, "Cart": self.Cart}
+    
 class BusinessOwner:
     def __init__(self):
         self.Username = ""
@@ -18,12 +24,14 @@ class BusinessOwner:
         self.Password = ""
         self.Cart = ""
         self.Business = ""
+        self.BInfo = {}
     def Create_New_businessO(self, UName, Pass, UsrName, BusinessName):
         self.Username = UName
         self.Name = UsrName
         self.Password = Pass
         self.Business = BusinessName
         self.Cart = []
+        self.BInfo = {"User": self.Username, "Name": self.Name, "Password": self.Password, "Cart": self.Cart, "Business": self.Business}
 class Admin:
     def __init__(self):
         self.Username = ""
@@ -34,7 +42,37 @@ class Admin:
         self.Name = UsrName
         self.Password = Pass
         self.Cart = []
+try:
+    File3 = open("Users.dat", "rb")
+    while True:
+        try:
+            data = pickle.load(File3)
+            
+            RLU.append(data)
+        except(EOFError):
+            break
+    File3.close()
+except(FileNotFoundError):
+    print("")
+    print("WARNING! ''Users.dat'' not found!")
+    
+    
+try:
+    File6 = open("BusinessOwners.dat", "rb")
+    while True:
+        try:
+            data = pickle.load(File6)
+            #print(data.USR)
+            RLBO.append(data)
+        except(EOFError):
+            break
+    File6.close()
+except(FileNotFoundError):
+    print("")
+    print("WARNING! ''BusinessOwners.dat'' not found!")
+    
 
+    
 UD = {"JSmith": {"Name": "John Smith", "Password": "1234", "Cart": [], "UName": "JSmith"}, } #Dictonary of customers
 BD = {"TWells": {"Name": "Tom Wells", "Password": "5678", "Business": "Tom's Diner", "Cart": [] }, } #Dictonary of Business Owners
 AD = {"PHammel": {"Name": "Payton Hammel", "Password": "1010", "Cart": []}, "BEthier": {"Name": "Brian Ethier", "Password": "1100", "Cart": []} } #Dictonary of Admins
@@ -43,37 +81,44 @@ LS = ["Tom's Diner"]
 DL = []
 CU = "" #Current User's name
 BN = "" #Current Business's name
-
+st.write(f" {RLU} ")
+st.write(f"{RLBO}")
 def LoginScr(username, password):
     global CU, BN
+    
+    
+    if len(RLU) > 0 or len(RLBO) > 0 or len(RLADMIN) > 0:
+        for i in range(len(RLU)):
+            if username == RLU[i]['User']:
+                if password == RLU[i]["Password"]:
+                    CU = RLU[i]['Name']
+                    BN = ""
 
-    if username in UD:
-        if password == UD[username]["Password"]:
-            CU = UD[username]["Name"]
-            BN = ""
+                    st.success("Login Successful")
+                    st.write(f"Welcome, {CU}!")
+                    return
+        for d in range(len(RLBO)):
+            if username == RLBO[d]['User']:
+                if password == RLBO[d]["Password"]:
+                    CU = RLBO[d]['Name']
+                    BN = RLBO[d]['Business']
 
-            st.success("Login Successful")
-            st.write(f"Welcome, {CU}!")
-            return
-
-    elif username in BD:
-        if password == BD[username]["Password"]:
-            CU = BD[username]["Name"]
-            BN = BD[username]["Business"]
-
-            st.success("Login Successful")
-            st.write(f"Welcome, {CU}!")
-            st.write(f"Business: {BN}")
-            return
-
-    elif username in AD:
-        if password == AD[username]["Password"]:
-            CU = AD[username]["Name"]
-            BN = ""
-
-            st.success("Login Successful")
-            st.write(f"Welcome, Admin {CU}!")
-            return
+                    st.success("Login Successful")
+                    st.write(f"Welcome, {CU}!")
+                    st.write(f"Business: {BN}")
+                    return
+        for k in range(len(RLADMIN)):
+            if username == RLADMIN[k]['User']:
+                if password == RLADMIN[k]["Password"]:
+                    CU = RLADMIN[k]['Name']
+                    #BN = ADMIN[k]['Business']
+                    st.success("Login Successful")
+                    st.write(f"Welcome, {CU}!")
+                    #st.write(f"Business: {BN}")
+                    return
+   
+    
+    
 
     st.error("Login Failed")
     st.write("Invalid username or password.")
@@ -83,14 +128,21 @@ def SignUp(username, password, full_name):
         st.error("Please fill out all fields")
         return
 
-    if username in UD or username in BD or username in AD:
-        st.error("That username already exists, please choose another one.")
-        return
+    if len(RLU) > 0 or len(RLBO) > 0 or len(RLADMIN) > 0:
+        for i in range(len(RLU)):
+            if username in RLU[i]['User']:
+                st.error("That username already exists, please choose another one.")
+                return
+        for d in range(len(RLBO)):
+            if username in RLBO[d]['User']:
+                st.error("That username already exists, please choose another one.")
+                return
 
     NUser = User()  
     NUser.Create_New_user(username, password, full_name)
     file1 = open("Users.dat", "ab")
-    pickle.dump(NUser, file1)
+    pickle.dump(NUser.Info, file1)
+    RLU.append(NUser.Info)
     file1.close()
 
     st.success("Account created successfully!")
@@ -102,18 +154,25 @@ def BusinessSignUp(username, password, full_name, business_name):
         st.error("Please fill out all fields")
         return
 
-    if username in UD or username in BD or username in AD:
-        st.error("That username already exists, please choose another one.")
-        return
+    if len(RLU) > 0 or len(RLBO) > 0 or len(RLADMIN) > 0:
+        for i in range(len(RLU)):
+            if username in RLU[i]['User']:
+                st.error("That username already exists, please choose another one.")
+                return
+        for d in range(len(RLBO)):
+            if username in RLBO[d]['User']:
+                st.error("That username already exists, please choose another one.")
+                return
+        #for k in range(len(RLADMIN)):
+        #st.error("That username already exists, please choose another one.")
+        #return
 
     NBusinessO = BusinessOwner()
     NBusinessO.Create_New_businessO(username, password, full_name, business_name)
     file2 = open("BusinessOwners.dat", "ab")
-    pickle.dump(NBusinessO, file2)
+    pickle.dump(NBusinessO.BInfo, file2)
+    RLBO.append(NBusinessO.BInfo)
     file2.close()
-
-    
-
     st.success("Business account created successfully!")
     st.write(f"Welcome, {full_name}!")
     st.write(f"Business: {business_name}")
