@@ -42,6 +42,41 @@ class Admin:
         self.Name = UsrName
         self.Password = Pass
         self.Cart = []
+
+class Product:
+    def __init__(self):
+        self.ProductID = 0
+        self.Name = ""
+        self.Description = ""
+        self.Price = 0.00
+        self.Quantity = 0
+
+    def Edit_Product(self):
+        self.Name = ""
+        self.Description = ""
+        self.Price = 0.00
+        self.Quantity = 0
+
+    def Delete_Product(self):
+        return self.ProductID
+
+class Order:
+    def __init__(self):
+        self.OrderID = 0
+        self.Customer = ""
+        self.Business = ""
+        self.Items = ""
+
+        self.Total = sum(
+            item["Price"] * item["Quantity"]
+            for item in Items
+        )
+
+        self.Status = "Pending"
+
+    def Update_Status(self):
+        self.Status = NewStatus
+
 try:
     File3 = open("Users.dat", "rb")
     while True:
