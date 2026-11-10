@@ -9,13 +9,15 @@ class User:
         self.Name = ""
         self.Password = ""
         self.Cart = []
+        self.Orders = []
         self.Info = {}
     def Create_New_user(self, UName, Pass, UsrName):
         self.Username = UName
         self.Name = UsrName
         self.Password = Pass
         self.Cart = []
-        self.Info = {"User": self.Username, "Name": self.Name, "Password": self.Password, "Cart": self.Cart}
+        self.Orders = []
+        self.Info = {"User": self.Username, "Name": self.Name, "Password": self.Password, "Cart": self.Cart, "Orders": self.Orders}
     
 class BusinessOwner:
     def __init__(self):
@@ -24,6 +26,8 @@ class BusinessOwner:
         self.Password = ""
         self.Cart = ""
         self.Business = ""
+        self.Products = []
+        self.Orders = []
         self.BInfo = {}
     def Create_New_businessO(self, UName, Pass, UsrName, BusinessName):
         self.Username = UName
@@ -31,7 +35,9 @@ class BusinessOwner:
         self.Password = Pass
         self.Business = BusinessName
         self.Cart = []
-        self.BInfo = {"User": self.Username, "Name": self.Name, "Password": self.Password, "Cart": self.Cart, "Business": self.Business}
+        self.Products = []
+        self.Orders = []
+        self.BInfo = {"User": self.Username, "Name": self.Name, "Password": self.Password, "Cart": self.Cart, "Business": self.Business, "Products": self.Products, "Orders": self.Orders}
 class Admin:
     def __init__(self):
         self.Username = ""
