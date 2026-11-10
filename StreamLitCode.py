@@ -187,16 +187,20 @@ def SignUp(username, password, full_name):
 
     if len(RLU) > 0 or len(RLBO) > 0 or len(RLADMIN) > 0:
         for i in range(len(RLU)):
-            if username in RLU[i]['User']:
+            if username == RLU[i]['User']:
                 st.error("That username already exists, please choose another one.")
                 return
         for d in range(len(RLBO)):
-            if username in RLBO[d]['User']:
+            if username == RLBO[d]['User']:
                 st.error("That username already exists, please choose another one.")
                 return
-
+        if username in AD:
+        st.error("That username already exists, please choose another one.")
+        return
+        
     NUser = User()  
     NUser.Create_New_user(username, password, full_name)
+    
     file1 = open("Users.dat", "ab")
     pickle.dump(NUser.Info, file1)
     RLU.append(NUser.Info)
