@@ -244,6 +244,47 @@ def Dashboard():
     account = st.session_state.account
     role = st.session_state.role
 
+    st.sidebar.title("Navigation")
+    
+    if role == "Customer":
+        st.title(f"Welcome to Your Customer Dashboard, {account['Name']}!")
+
+        options = [
+            "Home",
+            "Browse Businesses",
+            "My Cart",
+            "My Orders",
+            "My Statistics"
+        ]
+        
+        selection = st.sidebar.radio("Select a Page", options)
+        
+    elif role == "Business Owner":
+        st.title(f"Welcome to Your Business Dashboard, {account['Business']}!)
+
+        options = [
+            "Home",
+            "Manage Products",
+            "Orders Received",
+            "My Statistics"
+        ]
+        
+        selection = st.sidebar.radio("Select a Page", options)
+
+    elif role == "Admin":
+        st.title("Admin Dashboard")
+
+        options = [
+            "Home",
+            "Customers",
+            "Businesses",
+            "All Orders",
+            "My Statistics"
+        ]
+
+        selection = st.sidebar.radio("Select a Page", options)
+    
+
     
 
 
