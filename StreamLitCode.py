@@ -135,6 +135,11 @@ def LoginScr(username, password):
                     CU = RLU[i]['Name']
                     BN = ""
 
+                    st.session_state.logged_in = True
+                    st.session_state.role = "Customer"
+                    st.session_state.account = RLU[i]
+                    st.session_state.screen = "dashboard"
+                    
                     st.success("Login Successful")
                     st.write(f"Welcome, {CU}!")
                     return
@@ -144,6 +149,11 @@ def LoginScr(username, password):
                     CU = RLBO[d]['Name']
                     BN = RLBO[d]['Business']
 
+                    st.session_state.logged_in = True
+                    st.session_state.role = "Business Owner"
+                    st.session_state.account = RLBO[d]
+                    st.session_state.screen = "dashboard"
+                    
                     st.success("Login Successful")
                     st.write(f"Welcome, {CU}!")
                     st.write(f"Business: {BN}")
@@ -153,6 +163,12 @@ def LoginScr(username, password):
                 if password == RLADMIN[k]["Password"]:
                     CU = RLADMIN[k]['Name']
                     #BN = ADMIN[k]['Business']
+                    
+                    st.session_state.logged_in = True
+                    st.session_state.role = "Admin"
+                    st.session_state.account = AD[username_admin]
+                    st.session_state.screen = "dashboard"
+                    
                     st.success("Login Successful")
                     st.write(f"Welcome, {CU}!")
                     #st.write(f"Business: {BN}")
@@ -219,7 +235,12 @@ def BusinessSignUp(username, password, full_name, business_name):
     st.write(f"Business: {business_name}")
     st.info("You can now return to Login and log in.")
 
+def Dashboard():
 
+    account = st.session_state.account
+    role = st.session_state.role
+
+    
 
 
 st.set_page_config(
