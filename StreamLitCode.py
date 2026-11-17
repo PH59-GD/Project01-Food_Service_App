@@ -6,6 +6,17 @@ st.set_page_config(
     layout="centered",
 )
 
+if "screen" not in st.session_state:
+    st.session_state.screen = "welcome"
+
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+
+if "account" not in st.session_state:
+    st.session_state.account = None
+
+if "role" not in st.session_state:
+    st.session_state.role = None
 
 RLU = []
 RLBO = []
@@ -84,8 +95,9 @@ class Product:
     def Delete_Product(self):
         return self.ProductID
 
+
 #class Order:
-   # def __init__(self):
+ #   def __init__(self):
         self.OrderID = 0
         self.Customer = ""
         self.Business = ""
@@ -135,6 +147,10 @@ BD = {"TWells": {"Name": "Tom Wells", "Password": "5678", "Business": "Tom's Din
                  "Cart": []}, }  # Dictonary of Business Owners
 AD = {"PHammel": {"Name": "Payton Hammel", "Password": "1010", "Cart": []},
       "BEthier": {"Name": "Brian Ethier", "Password": "1100", "Cart": []}}  # Dictonary of Admins
+for username, admin in AD.items():
+
+    admin["User"] = username
+    RLADMIN.append(admin)
 NPS = []
 LS = ["Tom's Diner"]
 DL = []
@@ -155,15 +171,15 @@ def LoginScr(username, password):
                     CU = RLU[i]['Name']
                     BN = ""
 
-                    st.success("Log in Successful")
-                    st.write("Welcome, {CU}!")
-                    
+                    st.success("Login Successful")
+                    st.write(f"Welcome, {CU}!")
+
                     st.session_state.account = RLU[i]
                     st.session_state.role = "Customer"
                     st.session_state.logged_in = True
 
                     return True
-                    
+
         for d in range(len(RLBO)):
             if username == RLBO[d]['User']:
                 if password == RLBO[d]["Password"]:
@@ -174,12 +190,12 @@ def LoginScr(username, password):
                     st.write(f"Welcome, {CU}!")
                     st.write(f"Business: {BN}")
 
-                    st.session_state.account = RLBO[i]
+                    st.session_state.account = RLBO[d]
                     st.session_state.role = "Business Owner"
                     st.session_state.logged_in = True
 
                     return True
-                    
+
         for k in range(len(RLADMIN)):
             if username == RLADMIN[k]['User']:
                 if password == RLADMIN[k]["Password"]:
@@ -187,17 +203,16 @@ def LoginScr(username, password):
                     # BN = ADMIN[k]['Business']
                     st.success("Login Successful")
                     st.write(f"Welcome, {CU}!")
-                    # st.write(f"Business: {BN}")
 
-                    st.session_state.account = RLADMIN[i]
+                    st.session_state.account = RLADMIN[k]
                     st.session_state.role = "Admin"
                     st.session_state.logged_in = True
 
                     return True
-                    
 
     st.error("Login Failed")
     st.write("Invalid username or password.")
+
     return False
 
 def SignUp(username, password, full_name):
@@ -207,11 +222,11 @@ def SignUp(username, password, full_name):
 
     if len(RLU) > 0 or len(RLBO) > 0 or len(RLADMIN) > 0:
         for i in range(len(RLU)):
-            if username in RLU[i]['User']:
+            if username == RLU[i]['User']:
                 st.error("That username already exists, please choose another one.")
                 return
         for d in range(len(RLBO)):
-            if username in RLBO[d]['User']:
+            if username == RLBO[d]['User']:
                 st.error("That username already exists, please choose another one.")
                 return
 
@@ -234,11 +249,11 @@ def BusinessSignUp(username, password, full_name, business_name):
 
     if len(RLU) > 0 or len(RLBO) > 0 or len(RLADMIN) > 0:
         for i in range(len(RLU)):
-            if username in RLU[i]['User']:
+            if username == RLU[i]['User']:
                 st.error("That username already exists, please choose another one.")
                 return
         for d in range(len(RLBO)):
-            if username in RLBO[d]['User']:
+            if username == RLBO[d]['User']:
                 st.error("That username already exists, please choose another one.")
                 return
         # for k in range(len(RLADMIN)):
@@ -383,17 +398,6 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-if "screen" not in st.session_state:
-    st.session_state.screen = "welcome"
-
-if "logged_in" not in st.session_state:
-    st.session_state.logged_in = False
-
-if "account" not in st.session_state:
-    st.session_state.account = None
-
-if "role" not in st.session_state:
-    st.session_state.role = None
 
 if st.session_state.screen == "welcome":
     st.title("Welcome!")
