@@ -147,6 +147,10 @@ BD = {"TWells": {"Name": "Tom Wells", "Password": "5678", "Business": "Tom's Din
                  "Cart": []}, }  # Dictonary of Business Owners
 AD = {"PHammel": {"Name": "Payton Hammel", "Password": "1010", "Cart": []},
       "BEthier": {"Name": "Brian Ethier", "Password": "1100", "Cart": []}}  # Dictonary of Admins
+for username, admin in AD.items():
+
+    admin["User"] = username
+    RLADMIN.append(admin)
 NPS = []
 LS = ["Tom's Diner"]
 DL = []
@@ -218,11 +222,11 @@ def SignUp(username, password, full_name):
 
     if len(RLU) > 0 or len(RLBO) > 0 or len(RLADMIN) > 0:
         for i in range(len(RLU)):
-            if username in RLU[i]['User']:
+            if username == RLU[i]['User']:
                 st.error("That username already exists, please choose another one.")
                 return
         for d in range(len(RLBO)):
-            if username in RLBO[d]['User']:
+            if username == RLBO[d]['User']:
                 st.error("That username already exists, please choose another one.")
                 return
 
@@ -245,11 +249,11 @@ def BusinessSignUp(username, password, full_name, business_name):
 
     if len(RLU) > 0 or len(RLBO) > 0 or len(RLADMIN) > 0:
         for i in range(len(RLU)):
-            if username in RLU[i]['User']:
+            if username == RLU[i]['User']:
                 st.error("That username already exists, please choose another one.")
                 return
         for d in range(len(RLBO)):
-            if username in RLBO[d]['User']:
+            if username == RLBO[d]['User']:
                 st.error("That username already exists, please choose another one.")
                 return
         # for k in range(len(RLADMIN)):
