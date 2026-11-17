@@ -1,8 +1,17 @@
 import streamlit as st
 import pickle
+
+st.set_page_config(
+    page_title="Login",
+    layout="centered",
+)
+
+
 RLU = []
 RLBO = []
 RLADMIN = []
+
+
 class User:
     def __init__(self):
         self.Username = ""
@@ -11,14 +20,17 @@ class User:
         self.Cart = []
         self.Orders = []
         self.Info = {}
+
     def Create_New_user(self, UName, Pass, UsrName):
         self.Username = UName
         self.Name = UsrName
         self.Password = Pass
         self.Cart = []
         self.Orders = []
-        self.Info = {"User": self.Username, "Name": self.Name, "Password": self.Password, "Cart": self.Cart, "Orders": self.Orders}
-    
+        self.Info = {"User": self.Username, "Name": self.Name, "Password": self.Password,
+                     "Cart": self.Cart, "Orders": self.Orders}
+
+
 class BusinessOwner:
     def __init__(self):
         self.Username = ""
@@ -29,6 +41,7 @@ class BusinessOwner:
         self.Products = []
         self.Orders = []
         self.BInfo = {}
+
     def Create_New_businessO(self, UName, Pass, UsrName, BusinessName):
         self.Username = UName
         self.Name = UsrName
@@ -37,12 +50,17 @@ class BusinessOwner:
         self.Cart = []
         self.Products = []
         self.Orders = []
-        self.BInfo = {"User": self.Username, "Name": self.Name, "Password": self.Password, "Cart": self.Cart, "Business": self.Business, "Products": self.Products, "Orders": self.Orders}
+        self.BInfo = {"User": self.Username, "Name": self.Name, "Password": self.Password, "Cart": self.Cart,
+                      "Business": self.Business, "Products": self.Products,
+            "Orders": self.Orders}
+
+
 class Admin:
     def __init__(self):
         self.Username = ""
         self.Name = ""
         self.Cart = ""
+
     def Create_New_Admin(self, UName, Pass, UsrName):
         self.Username = UName
         self.Name = UsrName
@@ -83,12 +101,13 @@ class Order:
     def Update_Status(self):
         self.Status = NewStatus
 
+
 try:
     File3 = open("Users.dat", "rb")
     while True:
         try:
             data = pickle.load(File3)
-            
+
             RLU.append(data)
         except(EOFError):
             break
@@ -96,14 +115,13 @@ try:
 except(FileNotFoundError):
     print("")
     print("WARNING! ''Users.dat'' not found!")
-    
-    
+
 try:
     File6 = open("BusinessOwners.dat", "rb")
     while True:
         try:
             data = pickle.load(File6)
-            #print(data.USR)
+            # print(data.USR)
             RLBO.append(data)
         except(EOFError):
             break
@@ -111,23 +129,25 @@ try:
 except(FileNotFoundError):
     print("")
     print("WARNING! ''BusinessOwners.dat'' not found!")
-    
 
-    
-UD = {"JSmith": {"Name": "John Smith", "Password": "1234", "Cart": [], "UName": "JSmith"}, } #Dictonary of customers
-BD = {"TWells": {"Name": "Tom Wells", "Password": "5678", "Business": "Tom's Diner", "Cart": [] }, } #Dictonary of Business Owners
-AD = {"PHammel": {"Name": "Payton Hammel", "Password": "1010", "Cart": []}, "BEthier": {"Name": "Brian Ethier", "Password": "1100", "Cart": []} } #Dictonary of Admins
+UD = {"JSmith": {"Name": "John Smith", "Password": "1234", "Cart": [], "UName": "JSmith"}, }  # Dictonary of customers
+BD = {"TWells": {"Name": "Tom Wells", "Password": "5678", "Business": "Tom's Diner",
+                 "Cart": []}, }  # Dictonary of Business Owners
+AD = {"PHammel": {"Name": "Payton Hammel", "Password": "1010", "Cart": []},
+      "BEthier": {"Name": "Brian Ethier", "Password": "1100", "Cart": []}}  # Dictonary of Admins
 NPS = []
 LS = ["Tom's Diner"]
 DL = []
-CU = "" #Current User's name
-BN = "" #Current Business's name
+CU = ""  # Current User's name
+BN = ""  # Current Business's name
 st.write(f" {RLU} ")
 st.write(f"{RLBO}")
+
+
+
 def LoginScr(username, password):
     global CU, BN
-    
-    
+
     if len(RLU) > 0 or len(RLBO) > 0 or len(RLADMIN) > 0:
         for i in range(len(RLU)):
             if username == RLU[i]['User']:
@@ -135,11 +155,6 @@ def LoginScr(username, password):
                     CU = RLU[i]['Name']
                     BN = ""
 
-                    st.session_state.logged_in = True
-                    st.session_state.role = "Customer"
-                    st.session_state.account = RLU[i]
-                    st.session_state.screen = "dashboard"
-                    
                     st.success("Login Successful")
                     st.write(f"Welcome, {CU}!")
                     return
@@ -149,11 +164,6 @@ def LoginScr(username, password):
                     CU = RLBO[d]['Name']
                     BN = RLBO[d]['Business']
 
-                    st.session_state.logged_in = True
-                    st.session_state.role = "Business Owner"
-                    st.session_state.account = RLBO[d]
-                    st.session_state.screen = "dashboard"
-                    
                     st.success("Login Successful")
                     st.write(f"Welcome, {CU}!")
                     st.write(f"Business: {BN}")
@@ -162,23 +172,15 @@ def LoginScr(username, password):
             if username == RLADMIN[k]['User']:
                 if password == RLADMIN[k]["Password"]:
                     CU = RLADMIN[k]['Name']
-                    #BN = ADMIN[k]['Business']
-                    
-                    st.session_state.logged_in = True
-                    st.session_state.role = "Admin"
-                    st.session_state.account = AD[username_admin]
-                    st.session_state.screen = "dashboard"
-                    
+                    # BN = ADMIN[k]['Business']
                     st.success("Login Successful")
                     st.write(f"Welcome, {CU}!")
-                    #st.write(f"Business: {BN}")
+                    # st.write(f"Business: {BN}")
                     return
-   
-    
-    
 
     st.error("Login Failed")
     st.write("Invalid username or password.")
+
 
 def SignUp(username, password, full_name):
     if not username or not password or not full_name:
@@ -187,20 +189,16 @@ def SignUp(username, password, full_name):
 
     if len(RLU) > 0 or len(RLBO) > 0 or len(RLADMIN) > 0:
         for i in range(len(RLU)):
-            if username == RLU[i]['User']:
+            if username in RLU[i]['User']:
                 st.error("That username already exists, please choose another one.")
                 return
         for d in range(len(RLBO)):
-            if username == RLBO[d]['User']:
+            if username in RLBO[d]['User']:
                 st.error("That username already exists, please choose another one.")
                 return
-        if username in AD:
-        st.error("That username already exists, please choose another one.")
-        return
-        
-    NUser = User()  
+
+    NUser = User()
     NUser.Create_New_user(username, password, full_name)
-    
     file1 = open("Users.dat", "ab")
     pickle.dump(NUser.Info, file1)
     RLU.append(NUser.Info)
@@ -209,6 +207,7 @@ def SignUp(username, password, full_name):
     st.success("Account created successfully!")
     st.write(f"Welcome, {full_name}!")
     st.info("You can now return to Login Screen and log in.")
+
 
 def BusinessSignUp(username, password, full_name, business_name):
     if not username or not password or not full_name or not business_name:
@@ -224,9 +223,9 @@ def BusinessSignUp(username, password, full_name, business_name):
             if username in RLBO[d]['User']:
                 st.error("That username already exists, please choose another one.")
                 return
-        #for k in range(len(RLADMIN)):
-        #st.error("That username already exists, please choose another one.")
-        #return
+        # for k in range(len(RLADMIN)):
+        # st.error("That username already exists, please choose another one.")
+        # return
 
     NBusinessO = BusinessOwner()
     NBusinessO.Create_New_businessO(username, password, full_name, business_name)
@@ -240,58 +239,99 @@ def BusinessSignUp(username, password, full_name, business_name):
     st.info("You can now return to Login and log in.")
 
 def Dashboard():
+    account = st.session_state.account # jsmith, bethier, etc
+    role = st.session_state.role # Admin, Business, Customer
 
-    account = st.session_state.account
-    role = st.session_state.role
+    st.sidebar.title("Local-E Market")
+    st.sidebar.write("Dashboard")
 
-    st.sidebar.title("Navigation")
-    
     if role == "Customer":
-        st.title(f"Welcome to Your Customer Dashboard, {account['Name']}!")
 
         options = [
             "Home",
             "Browse Businesses",
-            "My Cart",
+            "Shopping Cart",
             "My Orders",
-            "My Statistics"
+            "User Statistics"
         ]
-        
-        selection = st.sidebar.radio("Select a Page", options)
-        
+
     elif role == "Business Owner":
-        st.title(f"Welcome to Your Business Dashboard, {account['Business']}!)
 
         options = [
             "Home",
             "Manage Products",
-            "Orders Received",
-            "My Statistics"
+            "View Incoming Orders",
+            "Business Statistics"
         ]
-        
-        selection = st.sidebar.radio("Select a Page", options)
 
     elif role == "Admin":
-        st.title("Admin Dashboard")
 
         options = [
             "Home",
-            "Customers",
-            "Businesses",
-            "All Orders",
-            "My Statistics"
+            "Manage Products",
+            "View Incoming Orders",
+            "Customer Management",
+            "Business Management",
+            "App Statistics"
         ]
 
-        selection = st.sidebar.radio("Select a Page", options)
-    
 
-    
+    selection = st.sidebar.radio(
+        "Navigation",
+        options)
 
 
-st.set_page_config(
-    page_title="Login",
-    layout="centered",
-)
+    if selection == "Home":
+
+        st.subheader("Dashboard Overview")
+        st.write(f"Welcome back, {account['Name']}!")
+
+        col1, col2, col3 = st.columns(3)
+
+        if role == "Customer":
+
+            with col1:
+                st.metric(
+                    "Total Orders",
+                    len(account.get("Orders", []))
+                )
+
+            with col2:
+                st.metric(
+                    "Cart Items",
+                    len(account.get("Cart", []))
+                )
+
+            with col3:
+                st.metric("Account Type", role)
+
+        elif role == "Business Owner":
+
+            with col1:
+                st.metric(
+                    "Products",
+                    len(account.get("Products", []))
+                )
+
+            with col2:
+                st.metric(
+                    "Orders",
+                    len(account.get("Orders", []))
+                )
+
+            with col3:
+                st.metric("Account Type", role)
+
+        elif role == "Admin":
+
+            with col1:
+                st.metric("Customers", len(RLU))
+
+            with col2:
+                st.metric("Businesses", len(RLBO))
+
+            with col3:
+                st.metric("Administrators", len(RLADMIN))
 
 st.markdown("""
 <style>
@@ -321,13 +361,21 @@ st.markdown("""
         font-size: 32px;
     }
 
-   
+
 </style>
 """, unsafe_allow_html=True)
 
 if "screen" not in st.session_state:
     st.session_state.screen = "welcome"
 
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+
+if "account" not in st.session_state:
+    st.session_state.account = None
+
+if "role" not in st.session_state:
+    st.session_state.role = None
 
 if st.session_state.screen == "welcome":
     st.title("Welcome!")
@@ -366,11 +414,18 @@ elif st.session_state.screen == "login":
 
     if st.button("Login", key="login_button"):
 
-        # Don't allow empty login information
         if not username or not password:
+
             st.error("Please enter a username and password.")
+
+        elif LoginScr(username, password):
+
+            st.session_state.screen = "dashboard"
+            st.rerun()
+
         else:
-            LoginScr(username, password)
+
+            st.error("Incorrect username or password.")
 
     if st.button("Back"):
         st.session_state.screen = "welcome"
@@ -425,7 +480,7 @@ elif st.session_state.screen == "signup":
     if st.button("Back"):
         st.session_state.screen = "welcome"
         st.rerun()
-        
+
     if st.button("Sign Up", key="signup_button"):
 
         if not all([
@@ -458,3 +513,12 @@ elif st.session_state.screen == "signup":
                 new_name,
                 business_name
             )
+
+elif st.session_state.screen == "dashboard":
+
+    if st.session_state.logged_in:
+        Dashboard()
+
+    else:
+        st.session_state.screen = "welcome"
+        st.rerun()
