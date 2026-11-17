@@ -84,8 +84,8 @@ class Product:
     def Delete_Product(self):
         return self.ProductID
 
-class Order:
-    def __init__(self):
+#class Order:
+   # def __init__(self):
         self.OrderID = 0
         self.Customer = ""
         self.Business = ""
@@ -98,7 +98,7 @@ class Order:
 
         self.Status = "Pending"
 
-    def Update_Status(self):
+   # def Update_Status(self):
         self.Status = NewStatus
 
 
@@ -155,9 +155,15 @@ def LoginScr(username, password):
                     CU = RLU[i]['Name']
                     BN = ""
 
-                    st.success("Login Successful")
-                    st.write(f"Welcome, {CU}!")
-                    return
+                    st.success("Log in Successful")
+                    st.write("Welcome, {CU}!")
+                    
+                    st.session_state.account = RLU[i]
+                    st.session_state.role = "Customer"
+                    st.session_state.logged_in = True
+
+                    return True
+                    
         for d in range(len(RLBO)):
             if username == RLBO[d]['User']:
                 if password == RLBO[d]["Password"]:
@@ -167,7 +173,13 @@ def LoginScr(username, password):
                     st.success("Login Successful")
                     st.write(f"Welcome, {CU}!")
                     st.write(f"Business: {BN}")
-                    return
+
+                    st.session_state.account = RLBO[i]
+                    st.session_state.role = "Business Owner"
+                    st.session_state.logged_in = True
+
+                    return True
+                    
         for k in range(len(RLADMIN)):
             if username == RLADMIN[k]['User']:
                 if password == RLADMIN[k]["Password"]:
@@ -176,11 +188,17 @@ def LoginScr(username, password):
                     st.success("Login Successful")
                     st.write(f"Welcome, {CU}!")
                     # st.write(f"Business: {BN}")
-                    return
+
+                    st.session_state.account = RLADMIN[i]
+                    st.session_state.role = "Admin"
+                    st.session_state.logged_in = True
+
+                    return True
+                    
 
     st.error("Login Failed")
     st.write("Invalid username or password.")
-
+    return False
 
 def SignUp(username, password, full_name):
     if not username or not password or not full_name:
