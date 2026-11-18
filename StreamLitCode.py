@@ -1,6 +1,7 @@
 import streamlit as st
 import pickle
-
+TEST = [{"Business Name": "Tom's Diner", "Products": {"Apple Pie": 2.99, "Eggs and Bacon": 6.99}, "Description": "A cozy diner located in Siloam Springs Arkansas. Located at 123456 South 1st Street."}, {"Business Name": "Dave's Hardware", "Products": {"Screws": 1.99, "Screwdriver": 8.99}, "Description": "A professional hardware store located in Siloam Springs Arkansas. Located at 253732 North Howard Way."}]
+#{"Business Name": "Tom's Diner", "Products": {"Apple Pie": 2.99, "Eggs and Bacon": 6.99}, "Description": "A cozy diner located in Siloam Springs Arkansas. Located at 123456 South 1st Street."}
 st.set_page_config(
     page_title="Login",
     layout="centered",
@@ -142,9 +143,7 @@ except(FileNotFoundError):
     print("")
     print("WARNING! ''BusinessOwners.dat'' not found!")
 
-UD = {"JSmith": {"Name": "John Smith", "Password": "1234", "Cart": [], "UName": "JSmith"}, }  # Dictonary of customers
-BD = {"TWells": {"Name": "Tom Wells", "Password": "5678", "Business": "Tom's Diner",
-                 "Cart": []}, }  # Dictonary of Business Owners
+
 AD = {"PHammel": {"Name": "Payton Hammel", "Password": "1010", "Cart": []},
       "BEthier": {"Name": "Brian Ethier", "Password": "1100", "Cart": []}}  # Dictonary of Admins
 for username, admin in AD.items():
@@ -365,6 +364,18 @@ def Dashboard():
 
             with col3:
                 st.metric("Administrators", len(RLADMIN))
+    if selection == "Browse Businesses":
+        st.title("Local Businesses")
+        for i in range(len(TEST)):
+            left, middle, right = st.columns(3)
+            st.divider()
+            st.subheader(f"{TEST[i]["Business Name"]}")
+            st.caption(f"{TEST[i]["Description"]}")
+            st.badge("NEW", icon="✨", color="red")
+            if st.button("Open", key=i):
+                st.write(f"{TEST[i]["Products"]}")
+
+
 
 st.markdown("""
 <style>
