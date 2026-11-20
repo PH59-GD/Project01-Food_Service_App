@@ -1,5 +1,9 @@
 import streamlit as st
 import pickle
+
+open("BusinessOwners.dat", "ab").close()
+open("Users.dat", "ab").close()
+
 TEST = [{"Business Name": "Tom's Diner", "Products": {"Apple Pie": 2.99, "Eggs and Bacon": 6.99}, "Description": "A cozy diner located in Siloam Springs Arkansas. Located at 123456 South 1st Street."}, {"Business Name": "Dave's Hardware", "Products": {"Screws": 1.99, "Screwdriver": 8.99}, "Description": "A professional hardware store located in Siloam Springs Arkansas. Located at 253732 North Howard Way."}]
 #{"Business Name": "Tom's Diner", "Products": {"Apple Pie": 2.99, "Eggs and Bacon": 6.99}, "Description": "A cozy diner located in Siloam Springs Arkansas. Located at 123456 South 1st Street."}
 st.set_page_config(
@@ -48,7 +52,7 @@ class BusinessOwner:
         self.Username = ""
         self.Name = ""
         self.Password = ""
-        self.Cart = ""
+        self.Cart = []
         self.Business = ""
         self.Products = []
         self.Orders = []
@@ -249,33 +253,58 @@ def SignUp(username, password, full_name):
 
 
 def BusinessSignUp(username, password, full_name, business_name):
+
+    username = username.strip()
+    password = password.strip()
+    full_name = full_name.strip()
+    business_name = business_name.strip()
+
     if not username or not password or not full_name or not business_name:
-        st.error("Please fill out all fields")
-        return
+        st.error("Please fill out all fields.")
+        return False
 
-    if len(RLU) > 0 or len(RLBO) > 0 or len(RLADMIN) > 0:
-        for i in range(len(RLU)):
-            if username == RLU[i]['User']:
-                st.error("That username already exists, please choose another one.")
-                return
-        for d in range(len(RLBO)):
-            if username == RLBO[d]['User']:
-                st.error("That username already exists, please choose another one.")
-                return
-        # for k in range(len(RLADMIN)):
-        # st.error("That username already exists, please choose another one.")
-        # return
+    # Check customer usernames
+    for user in RLU:
+        if username == user["User"]:
+            st.error("That username already exists.")
+            return False
 
+    # Check business owner usernames
+    for business in RLBO:
+        if username == business["User"]:
+            st.error("That username already exists.")
+            return False
+
+    # Check admin usernames
+    for admin in RLADMIN:
+        if username == admin["User"]:
+            st.error("That username already exists.")
+            return False
+
+    # Create the business owner
     NBusinessO = BusinessOwner()
-    NBusinessO.Create_New_businessO(username, password, full_name, business_name)
-    file2 = open("BusinessOwners.dat", "ab")
-    pickle.dump(NBusinessO.BInfo, file2)
+
+    NBusinessO.Create_New_businessO(
+        username,
+        password,
+        full_name,
+        business_name
+    )
+
+    # Save the business owner
+    with open("BusinessOwners.dat", "ab") as file2:
+        pickle.dump(NBusinessO.BInfo, file2)
+
+    # Add business owner to the current list
     RLBO.append(NBusinessO.BInfo)
-    file2.close()
+
     st.success("Business account created successfully!")
     st.write(f"Welcome, {full_name}!")
     st.write(f"Business: {business_name}")
     st.info("You can now return to Login and log in.")
+
+    return True
+
 
 def Dashboard():
     account = st.session_state.account # jsmith, bethier, etc
