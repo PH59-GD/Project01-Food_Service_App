@@ -569,14 +569,14 @@ elif st.session_state.screen == "signup":
         unsafe_allow_html=True
     )
 
-    # Choose account type
+    
     account_type = st.radio(
         "Account Type",
         ["Customer", "Business Owner"],
         key="account_type"
     )
 
-    # Signup form
+    
     with st.form("signup_form"):
 
         new_name = st.text_input(
