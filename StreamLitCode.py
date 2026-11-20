@@ -408,7 +408,38 @@ def Dashboard():
         st.write(" ")
         st.caption("Below you will see active orders for items you purchased.")
         st.divider()
-        
+
+    if selection == "Manage Products" and role == "Business Owner":
+        st.title("Manage Your Products")
+        st.divider
+
+        st.subheader("Add a New Product")
+
+        product_name = st.text_input("Product Name")
+        product_description = st.text_area("Product Description")
+        product_price = st.number_input(
+            "Product Price ($)",
+            min_value=0.01,
+        )
+    
+        if st.button("Add Product"):
+
+            if not product_name:
+                st.error("Please enter a product name.")
+
+            else:
+                new_product = {
+                    "Name": product_name,
+                    "Description": product_description,
+                    "Price": product_price,
+                    "Quantity": product_quantity
+                }
+
+                account["Products"].append(new_product)
+
+                st.success(f"{product_name} added successfully!")
+
+                st.rerun()
 
 
 
