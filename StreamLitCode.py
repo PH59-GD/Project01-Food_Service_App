@@ -411,7 +411,7 @@ def Dashboard():
 
     if selection == "Manage Products" and role == "Business Owner":
         st.title("Manage Your Products")
-        st.divider
+        st.divider()
 
         st.subheader("Add a New Product")
 
@@ -432,7 +432,6 @@ def Dashboard():
                     "Name": product_name,
                     "Description": product_description,
                     "Price": product_price,
-                    "Quantity": product_quantity
                 }
 
                 account["Products"].append(new_product)
