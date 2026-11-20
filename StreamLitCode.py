@@ -379,19 +379,21 @@ def Dashboard():
             st.subheader(f"{TEST[i]["Business Name"]}")
             st.caption(f"{TEST[i]["Description"]}")
             st.badge("NEW", icon="✨", color="red")
+            
             if st.button("Open", key=i):
+                
                 L = 0
                 for products in TEST[i]["Products"]:
                     
-                    st.write(f"{products}"+"            $"+ f"{str(TEST[i]['Products'][products])}")
+                    st.write(f"{products}"+"...............$"+ f"{str(TEST[i]['Products'][products])}")
                     st.write()
                     
                 #st.write(f"{TEST[i]["Products"]}")
                     a = list(TEST[i]["Products"])
                     print(a[L])
                     if st.button("Add to cart", key=a[L]):
-                        st.write("Button Works!")
                         account["Cart"].append(key)
+                        
                     L += 1
                         
     if selection == "Shopping Cart":
