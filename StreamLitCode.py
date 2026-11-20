@@ -22,7 +22,7 @@ if "role" not in st.session_state:
 RLU = []
 RLBO = []
 RLADMIN = []
-
+RCU = []
 
 class User:
     def __init__(self):
@@ -142,6 +142,11 @@ try:
 except(FileNotFoundError):
     print("")
     print("WARNING! ''BusinessOwners.dat'' not found!")
+    
+    
+
+    
+
 
 
 AD = {"PHammel": {"Name": "Payton Hammel", "Password": "1010", "Cart": []},
@@ -150,11 +155,10 @@ for username, admin in AD.items():
 
     admin["User"] = username
     RLADMIN.append(admin)
-NPS = []
-LS = ["Tom's Diner"]
-DL = []
+
 CU = ""  # Current User's name
 BN = ""  # Current Business's name
+CWU = []
 st.write(f" {RLU} ")
 st.write(f"{RLBO}")
 
@@ -162,14 +166,17 @@ st.write(f"{RLBO}")
 
 def LoginScr(username, password):
     global CU, BN
+    
 
     if len(RLU) > 0 or len(RLBO) > 0 or len(RLADMIN) > 0:
         for i in range(len(RLU)):
             if username == RLU[i]['User']:
                 if password == RLU[i]["Password"]:
                     CU = RLU[i]['Name']
+                    CWU = RLU[i]
+                    print(CWU)
                     BN = ""
-
+                    
                     st.success("Login Successful")
                     st.write(f"Welcome, {CU}!")
 
@@ -373,7 +380,32 @@ def Dashboard():
             st.caption(f"{TEST[i]["Description"]}")
             st.badge("NEW", icon="✨", color="red")
             if st.button("Open", key=i):
-                st.write(f"{TEST[i]["Products"]}")
+                L = 0
+                for products in TEST[i]["Products"]:
+                    
+                    st.write(f"{products}")
+                    
+                #st.write(f"{TEST[i]["Products"]}")
+                    a = list(TEST[i]["Products"])
+                    print(a[L])
+                    if st.button("Add to cart", key=a[L]):
+                        st.write("Button Works!")
+                        account["Cart"].append(key)
+                    L += 1
+                        
+    if selection == "Shopping Cart":
+        st.title("My Cart")
+        st.divider()
+        st.metric("Items in cart:", len(account["Cart"]))
+        for item in account["Cart"]:
+            st.divider()
+            st.write(item)
+    if selection == "My Orders":
+        st.title("My Orders")
+        st.write(" ")
+        st.caption("Below you will see active orders for items you purchased.")
+        st.divider()
+        
 
 
 
