@@ -383,7 +383,8 @@ def Dashboard():
                 L = 0
                 for products in TEST[i]["Products"]:
                     
-                    st.write(f"{products}")
+                    st.write(f"{products}"+"            $"+ f"{str(TEST[i]['Products'][products])}")
+                    st.write()
                     
                 #st.write(f"{TEST[i]["Products"]}")
                     a = list(TEST[i]["Products"])
