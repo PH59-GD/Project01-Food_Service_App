@@ -649,6 +649,10 @@ elif st.session_state.screen == "dashboard":
     if st.session_state.logged_in:
         Dashboard()
 
+        if st.button("Back"):
+            st.session_state.screen = "welcome"
+            st.rerun()
+
     else:
         st.session_state.screen = "welcome"
         st.rerun()
