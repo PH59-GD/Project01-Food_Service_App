@@ -569,77 +569,80 @@ elif st.session_state.screen == "signup":
         unsafe_allow_html=True
     )
 
+    # Choose account type
     account_type = st.radio(
         "Account Type",
-        ["Customer", "Business Owner"]
+        ["Customer", "Business Owner"],
+        key="account_type"
     )
 
-    new_name = st.text_input(
-        "Full Name",
-        key="signup_name"
-    )
+    # Signup form
+    with st.form("signup_form"):
 
-    new_username = st.text_input(
-        "Username",
-        key="signup_username"
-    )
-
-    new_password = st.text_input(
-        "Password",
-        type="password",
-        key="signup_password"
-    )
-
-    confirm_password = st.text_input(
-        "Confirm Password",
-        type="password",
-        key="confirm_password"
-    )
-
-    business_name = ""
-
-    if account_type == "Business Owner":
-        business_name = st.text_input(
-            "Business Name",
-            key="business_name"
+        new_name = st.text_input(
+            "Full Name",
+            key="signup_name"
         )
+
+        new_username = st.text_input(
+            "Username",
+            key="signup_username"
+        )
+
+        new_password = st.text_input(
+            "Password",
+            type="password",
+            key="signup_password"
+        )
+
+        confirm_password = st.text_input(
+            "Confirm Password",
+            type="password",
+            key="confirm_password"
+        )
+
+        business_name = ""
+
+        if account_type == "Business Owner":
+            business_name = st.text_input(
+                "Business Name",
+                key="business_name"
+            )
+
+        signup_button = st.form_submit_button("Sign Up")
+
+        if signup_button:
+
+            if not new_name.strip() or not new_username.strip() or not new_password or not confirm_password:
+                st.error("Please fill out all of the fields.")
+
+            elif new_password != confirm_password:
+                st.error("Passwords do not match.")
+
+            elif account_type == "Business Owner" and not business_name.strip():
+                st.error("Please enter your business name.")
+
+            elif account_type == "Customer":
+
+                SignUp(
+                    new_username,
+                    new_password,
+                    new_name
+                )
+
+            elif account_type == "Business Owner":
+
+                BusinessSignUp(
+                    new_username,
+                    new_password,
+                    new_name,
+                    business_name
+                )
 
     if st.button("Back"):
         st.session_state.screen = "welcome"
         st.rerun()
 
-    if st.button("Sign Up", key="signup_button"):
-
-        if not all([
-            new_name,
-            new_username,
-            new_password,
-            confirm_password
-        ]):
-            st.error("Please fill out all of the fields.")
-
-        elif new_password != confirm_password:
-            st.error("Passwords do not match.")
-
-        elif account_type == "Business Owner" and not business_name:
-            st.error("Please enter your business name.")
-
-        elif account_type == "Customer":
-
-            SignUp(
-                new_username,
-                new_password,
-                new_name
-            )
-
-        elif account_type == "Business Owner":
-
-            BusinessSignUp(
-                new_username,
-                new_password,
-                new_name,
-                business_name
-            )
 
 elif st.session_state.screen == "dashboard":
 
